@@ -10,9 +10,9 @@
 
 | 模組名稱 | 功能簡述 |
 |----------|-----------|
-| `S2PF-sniffer/` | 基於 libpcap 實作，擷取並比對來源 IP 封包指紋，驗證 Spoof 行為並產生警示 |
+| `S2PF路徑指紋/` | 利用mininet設置網路拓樸，，驗證 Spoof 行為並產生警示 |
 | `honeypot-analysis/` | 整合 Cowrie 蜜罐日誌，萃取高風險 IP，並交叉比對 S2PF 指紋紀錄 |
-| `rabin-kmeans/` | 使用 Rabin Fingerprint 對封包滑動視窗特徵建模，搭配 K-means 聚類進行攻擊行為分析 |
+| `CNN+LSTM-kmeans/` | 使用 Rabin Fingerprint 對封包滑動視窗特徵建模，搭配 K-means 聚類進行攻擊行為分析 |
 
 ---
 
@@ -46,3 +46,4 @@ cyber-research-showcase/
 ```bash
 sudo ./ip_sniffer --learn        # 建立來源 IP 對應指紋表
 sudo ./ip_sniffer --watch        # 比對封包指紋並產生可疑紀錄
+
