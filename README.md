@@ -10,40 +10,32 @@
 
 | 模組名稱 | 功能簡述 |
 |----------|-----------|
-| `S2PF路徑指紋/` | 利用mininet設置網路拓樸，，驗證 Spoof 行為並產生警示 |
-| `honeypot-analysis/` | 整合 Cowrie 蜜罐日誌，萃取高風險 IP，並交叉比對 S2PF 指紋紀錄 |
-| `CNN+LSTM-kmeans/` | 使用 Rabin Fingerprint 對封包滑動視窗特徵建模，搭配 K-means 聚類進行攻擊行為分析 |
+| `流量與特徵擷取/`| 透過threads並行處理多個pcap檔案，加速網路流量特徵的擷取，並彙整輸出為CSV檔。|
+| `攻擊偵測/`| 系統以Snort為基礎進行已知攻擊的偵測，並用CNN訓練網路流量分類器來強化對未知攻擊的辨識能力。|
+| `S2PF路徑指紋/` | 利用Mininet設置網路拓樸，當每筆IP經過不同的路由器都會產生不同的指紋，驗證 Spoof 行為並產生警示。|
+| `honeypot-analysis/` | 整合 Cowrie 蜜罐日誌，萃取高風險 IP 的惡意指令，並交叉比對 S2PF 指紋紀錄，以驗證攻擊來源與行為模式。 |
+| `CNN+LSTM-kmeans/` |萃取惡意指令特徵後，經深度學習（CNN+LSTM）建模後，配合 K-means 聚類進行攻擊行為分析與分類。  |
+## 路徑指紋環境
 
+本實驗使用 **Mininet** 建立多來源主機與交換器環境，並執行路徑指紋比對模組。  
+以下為實際執行時的拓墣輸出結果截圖：
+<img width="2000" height="548" alt="image" src="https://github.com/user-attachments/assets/07944c58-0ff3-4f3b-b553-7fbcb53646e0" />
+> 圖中顯示了 32 個主機 (h1 ~ h32) 與多個交換器 (s0, s_sub_0 ~ s_sub_9) 的連線情形，  
+> 以及 Mininet 啟動與結束時的日誌訊息，最後會輸出每筆IP的指紋 `error_final.json`。
 ---
 
-## 🧠 研究亮點
+##  研究亮點
 
-- 🔐 **S2PF（Source-to-Path Fingerprinting）驗證機制**  
+-  **S2PF（Source-to-Path Fingerprinting）驗證機制**  
   建立來源 IP 與其特徵路徑之對應指紋表，判別來源是否為假冒。
 
-- 🐍 **Cowrie 蜜罐整合**  
-  捕捉攻擊者行為與來源 IP，並與指紋比對進行異常偵測。
+-  **Cowrie 蜜罐整合**  
+  捕捉攻擊者行為與來源 IP，整理每個 IP 的惡意指令。
 
-- ⚙️ **Rabin fingerprint + k-means 聚類**  
-  利用滑動視窗方式提取封包指紋，將相似攻擊模式進行分群，形成攻擊簽章樣本。
+-  **CNN + LSTM + k-means 聚類**
+   
+    透過自動學習攻擊行為的特徵，增強攻擊及模式的識別性，再將相似攻擊模式進行分群，形成攻擊簽章樣本。
 
----
 
-## 📂 資料結構說明
 
-cyber-research-showcase/
-├── S2PF-sniffer/ # 封包擷取與指紋比對主程式
-├── honeypot-analysis/ # Cowrie 蜜罐日誌整合與 IP 分析模組
-├── rabin-kmeans/ # 特徵指紋生成與攻擊分群分析
-└── report/ # 專題報告、成果簡報
-
----
-
-## 🚀 如何使用
-
-以下為 `S2PF-sniffer` 執行範例：
-
-```bash
-sudo ./ip_sniffer --learn        # 建立來源 IP 對應指紋表
-sudo ./ip_sniffer --watch        # 比對封包指紋並產生可疑紀錄
 
